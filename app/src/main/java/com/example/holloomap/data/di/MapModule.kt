@@ -1,14 +1,14 @@
 package com.example.holloomap.data.di
 
 import android.app.Application
-import com.example.holloomap.data.location.DefaultLocationTracker
+import com.example.holloomap.data.repository.location.DefaultLocationTracker
 import com.example.holloomap.data.remote.MapApiService
 import com.example.holloomap.data.remote.UrlConstant.BASE_URL
 import com.example.holloomap.data.repository.MapRepository
 import com.example.holloomap.domain.use_case.GetDirection
 import com.example.holloomap.domain.use_case.MapUseCase
 import com.example.holloomap.data.repository.MapRepositoryImpl
-import com.example.holloomap.domain.location.LocationTracker
+import com.example.holloomap.domain.use_case.location.LocationTracker
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.Module

@@ -1,4 +1,4 @@
-package com.example.holloomap.domain.location
+package com.example.holloomap.domain.use_case.location
 
 import android.location.Location
 import androidx.activity.result.IntentSenderRequest

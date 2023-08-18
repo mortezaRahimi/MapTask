@@ -107,7 +107,6 @@ fun GoogleMapView(
                     snippet = "Your Location"
                 )
 
-
                 Marker(
                     state = MarkerState(position = viewModel.state.destinationMarker.position),
                     icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
