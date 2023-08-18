@@ -26,6 +26,7 @@ import com.example.holloomap.presentation.MapEvent
 import com.example.holloomap.presentation.MapViewModel
 import com.example.holloomap.util.UiEvent
 import com.example.holloomap.util.UiText
+import com.example.holloomap.util.isLocationEnabled
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -68,7 +69,6 @@ fun GoogleMapView(
                 }
 
                 is UiEvent.UserLocationDetected -> {
-
                     if (event.userLocation.latitude != 0.0)
                         cameraPositionState.animate(
                             update = CameraUpdateFactory.newCameraPosition(
@@ -84,41 +84,57 @@ fun GoogleMapView(
 
     if (locationPermissionsState.allPermissionsGranted) {
 
+        if (isLocationEnabled(context)) {
+            GoogleMap(
+                modifier = modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState,
+                properties = properties,
+                uiSettings = uiSettings,
+                onMapLoaded = { isMapLoaded = true },
+                onMapClick = {
+                    viewModel.onEvent(MapEvent.OnDestinationMarkerAdded(MarkerState(it)))
+                }
+            ) {
 
-        GoogleMap(
-            modifier = modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState,
-            properties = properties,
-            uiSettings = uiSettings,
-            onMapLoaded = { isMapLoaded = true },
-            onMapClick = {
-                viewModel.onEvent(MapEvent.OnDestinationMarkerAdded(MarkerState(it)))
+                if (isMapLoaded) {
+                    viewModel.onEvent(MapEvent.OnPermissionGranted)
+
+                    Marker(
+                        state = MarkerState(position = viewModel.state.originMarkerState.position),
+                        icon = BitmapDescriptorFactory.defaultMarker(
+                            BitmapDescriptorFactory.HUE_BLUE
+                        ),
+                        snippet = "Your Location"
+                    )
+
+                    Marker(
+                        state = MarkerState(position = viewModel.state.destinationMarker.position),
+                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
+                    )
+
+                    Polyline(
+                        points = viewModel.state.points,
+                        width = 20f,
+                        color = Color.Green
+                    )
+
+
+                }
             }
-        ) {
 
-            if (isMapLoaded) {
-                viewModel.onEvent(MapEvent.OnPermissionGranted)
-
-                Marker(
-                    state = MarkerState(position = viewModel.state.originMarkerState.position),
-                    icon = BitmapDescriptorFactory.defaultMarker(
-                        BitmapDescriptorFactory.HUE_BLUE
-                    ),
-                    snippet = "Your Location"
-                )
-
-                Marker(
-                    state = MarkerState(position = viewModel.state.destinationMarker.position),
-                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
-                )
-
-                Polyline(
-                    points = viewModel.state.points,
-                    width = 20f,
-                    color = Color.Green
-                )
+            BottomView(title = viewModel.state.title)
 
 
+        } else {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Please Turn ON device location \nthen open app again! ",
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally), )
             }
         }
     } else {

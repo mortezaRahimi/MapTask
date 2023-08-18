@@ -12,7 +12,5 @@ sealed class MapEvent {
 
     data class OnDestinationMarkerAdded(val marker: MarkerState) : MapEvent()
 
-    data class OnNewMarkerAdded(val marker: MarkerState) : MapEvent()
-
     data class OnSaveMarkerInfo(val marker: MarkerInfo) : MapEvent()
 }
