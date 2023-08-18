@@ -28,7 +28,10 @@ import com.example.holloomap.util.UiEvent
 import com.example.holloomap.util.UiText
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import kotlinx.coroutines.flow.collect
 
@@ -55,12 +58,24 @@ fun GoogleMapView(
     )
 
     LaunchedEffect(key1 = true) {
+
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message.asString(context)
                     )
+                }
+
+                is UiEvent.UserLocationDetected -> {
+
+                    if (event.userLocation.latitude != 0.0)
+                        cameraPositionState.animate(
+                            update = CameraUpdateFactory.newCameraPosition(
+                                CameraPosition(event.userLocation, 12f, 0f, 0f)
+                            ),
+                            durationMs = 1000
+                        )
                 }
                 else -> {}
             }
@@ -69,7 +84,7 @@ fun GoogleMapView(
 
     if (locationPermissionsState.allPermissionsGranted) {
 
-        //getuser location
+
         GoogleMap(
             modifier = modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
@@ -82,12 +97,16 @@ fun GoogleMapView(
         ) {
 
             if (isMapLoaded) {
+                viewModel.onEvent(MapEvent.OnPermissionGranted)
+
                 Marker(
-                    state = MarkerState(position = viewModel.state.userLocation.position),
+                    state = MarkerState(position = viewModel.state.originMarkerState.position),
                     icon = BitmapDescriptorFactory.defaultMarker(
                         BitmapDescriptorFactory.HUE_BLUE
                     ),
+                    snippet = "Your Location"
                 )
+
 
                 Marker(
                     state = MarkerState(position = viewModel.state.destinationMarker.position),

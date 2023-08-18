@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">HolooMap</string>
     <string name="granted">"Permission granted"</string>
+    <string name="turn_location_on">Please turn on your device GPS</string>
 </resources>

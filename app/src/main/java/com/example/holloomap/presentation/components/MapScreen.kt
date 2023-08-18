@@ -40,6 +40,7 @@ fun MapScreen(
                 is UiEvent.SimulateDriving -> {
 
                 }
+                else -> {}
             }
         }
     }
