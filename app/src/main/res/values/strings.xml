@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HolooMap</string>
+    <string name="granted">"Permission granted"</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.example.holloomap.presentation.components
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.*
@@ -44,6 +46,7 @@ fun MapScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
         GoogleMapView(
+            scaffoldState = scaffoldState,
             cameraPositionState = cameraPositionState,
             viewModel = viewModel,
             modifier = Modifier.fillMaxSize(),
