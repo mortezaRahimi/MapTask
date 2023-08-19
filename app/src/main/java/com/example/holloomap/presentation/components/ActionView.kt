@@ -20,6 +20,7 @@ fun ActionView(
     title: UiText,
     saveDestination: () -> Unit,
     getAllDes: () -> Unit,
+    shouldShowAllDes:Boolean,
     isDestinationAdded: Boolean
 ) {
 
@@ -30,6 +31,21 @@ fun ActionView(
             .fillMaxSize()
     ) {
 
+        if(shouldShowAllDes){
+            Row(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+            ) {
+
+                Button(
+                    modifier = Modifier.padding(8.dp),
+                    onClick = getAllDes,
+
+                    ) {
+                    Text(text = "Show All Des")
+                }
+            }
+        }
 
         if (isDestinationAdded) {
             Row(

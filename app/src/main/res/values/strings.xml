@@ -3,7 +3,7 @@
     <string name="granted">"Permission granted"</string>
     <string name="turn_location_on">Please turn on your device GPS</string>
     <string name="gps_alert">Please Turn ON device GPS\nthen open app again!</string>
-    <string name="pin_destination">Tap on the Map to pin your destination then Direction will appear</string>
+    <string name="pin_destination">Long Tap on the Map to pin your new destination then Direction will appear</string>
     <string name="save">Save this Destination</string>
     <string name="destination_saved">Destination Saved Successfully</string>
 </resources>

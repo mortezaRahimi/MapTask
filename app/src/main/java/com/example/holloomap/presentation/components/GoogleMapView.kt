@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.*
 import com.example.holloomap.R
 import com.example.holloomap.util.UiText
+import com.google.android.gms.maps.model.LatLng
 
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -78,7 +79,7 @@ fun GoogleMapView(
                 properties = properties,
                 uiSettings = uiSettings,
                 onMapLoaded = { isMapLoaded = true },
-                onMapClick = {
+                onMapLongClick = {
                     viewModel.onEvent(MapEvent.OnDestinationMarkerAdded(MarkerState(it)))
                 }
             ) {
@@ -106,6 +107,18 @@ fun GoogleMapView(
                         color = Color.Green
                     )
 
+                    if (viewModel.state.allDestinations.isNotEmpty())
+                        viewModel.state.allDestinations.forEach { position ->
+                            Marker(
+                                state = MarkerState(
+                                    position = LatLng(
+                                        position.lat.toDouble(),
+                                        position.lon.toDouble()
+                                    ),
+                                )
+                            )
+                        }
+
 
                 }
             }
@@ -114,7 +127,8 @@ fun GoogleMapView(
                 title = UiText.DynamicString(viewModel.state.title.asString(context)),
                 saveDestination = { viewModel.onEvent(MapEvent.OnSaveDestination) },
                 isDestinationAdded = viewModel.state.isDestinationAdded,
-                getAllDes = { viewModel.onEvent(MapEvent.OnGetAllDestinations) }
+                getAllDes = { viewModel.onEvent(MapEvent.OnGetAllDestinations) },
+                shouldShowAllDes = viewModel.state.shouldShowAllDestinations
             )
 
 

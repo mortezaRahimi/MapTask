@@ -88,9 +88,10 @@ class MapViewModel @Inject constructor(
             val destinations = mapUseCase.getAllDestinations()
 
             destinations.onEach {
-                it.onEach {item ->
-                    println(item.lat)
-                } }
+                state = state.copy(
+                    allDestinations = it,
+                )
+            }
 
         }.launchIn(viewModelScope)
     }
@@ -110,15 +111,14 @@ class MapViewModel @Inject constructor(
                 isDestinationAdded = false,
                 points = arrayListOf(),
                 destinationMarker = MarkerState(),
+                shouldShowAllDestinations = true
             )
 
             _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.destination_saved)))
 
+
         }
 
-
-//        viewModelScope.launch {
-//       }
     }
 
     private fun getCurrentLocation() {
