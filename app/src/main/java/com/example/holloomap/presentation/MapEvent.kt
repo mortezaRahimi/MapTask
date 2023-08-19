@@ -1,7 +1,5 @@
 package com.example.holloomap.presentation
 
-import com.example.holloomap.data.local.MarkerInfo
-import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.MarkerState
 
 sealed class MapEvent {
@@ -11,6 +9,4 @@ sealed class MapEvent {
     object OnPermissionGranted : MapEvent()
 
     data class OnDestinationMarkerAdded(val marker: MarkerState) : MapEvent()
-
-    data class OnSaveMarkerInfo(val marker: MarkerInfo) : MapEvent()
 }

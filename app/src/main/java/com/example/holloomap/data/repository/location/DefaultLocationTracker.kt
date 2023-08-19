@@ -21,10 +21,7 @@ class DefaultLocationTracker(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @SuppressLint("MissingPermission")
-    override suspend fun getCurrentLocation(
-        onEnabled: () -> Unit,
-        onDisabled: ((IntentSenderRequest)) -> Unit
-    ): Location? {
+    override suspend fun getCurrentLocation(): Location? {
         val locationManager = application.getSystemService(
             Context.LOCATION_SERVICE
         ) as LocationManager
@@ -34,7 +31,7 @@ class DefaultLocationTracker(
                 locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 
         if (!isGpsEnabled) {
-            checkLocationSetting(onEnabled = onEnabled, onDisabled = onDisabled , context = application.applicationContext)
+            //show location settings
             return null
         }
 
@@ -50,7 +47,7 @@ class DefaultLocationTracker(
                 }
                 addOnSuccessListener {
                     cont.resume(it) {}
-                // Resume coroutine with location result
+                    // Resume coroutine with location result
                 }
                 addOnFailureListener {
                     cont.resume(null) {} // Resume coroutine with null location result
@@ -58,42 +55,6 @@ class DefaultLocationTracker(
                 addOnCanceledListener {
                     cont.cancel() // Cancel the coroutine
                 }
-            }
-        }
-    }
-
-}
-
-fun checkLocationSetting(
-    context: Context,
-    onDisabled: (IntentSenderRequest) -> Unit,
-    onEnabled: () -> Unit
-) {
-
-    val locationRequest = LocationRequest.create().apply {
-        interval = 1000
-        fastestInterval = 1000
-        priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-    }
-
-    val client: SettingsClient = LocationServices.getSettingsClient(context)
-    val builder: LocationSettingsRequest.Builder = LocationSettingsRequest
-        .Builder()
-        .addLocationRequest(locationRequest)
-
-    val gpsSettingTask: Task<LocationSettingsResponse> =
-        client.checkLocationSettings(builder.build())
-
-    gpsSettingTask.addOnSuccessListener { onEnabled() }
-    gpsSettingTask.addOnFailureListener { exception ->
-        if (exception is ResolvableApiException) {
-            try {
-                val intentSenderRequest = IntentSenderRequest
-                    .Builder(exception.resolution)
-                    .build()
-                onDisabled(intentSenderRequest)
-            } catch (sendEx: IntentSender.SendIntentException) {
-                // ignore here
             }
         }
     }

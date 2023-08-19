@@ -1,7 +1,5 @@
 package com.example.holloomap.presentation.components
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.*
@@ -22,7 +20,6 @@ fun MapScreen(
 ) {
 
     val context = LocalContext.current
-    val state = viewModel.state
 
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(35.715298, 51.404343), 10f)

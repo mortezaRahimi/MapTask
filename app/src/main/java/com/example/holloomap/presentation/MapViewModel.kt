@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import com.example.holloomap.R
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
@@ -39,15 +40,19 @@ class MapViewModel @Inject constructor(
 
         when (event) {
             is MapEvent.OnPermissionGranted -> {
+
+                state = state.copy(
+                    title = UiText.StringResource(R.string.pin_destination)
+                )
                 getCurrentLocation()
             }
 
             is MapEvent.OnUserLocationDetected -> {
-                    state = state.copy(
-                        originMarkerState = event.marker,
-                        markerPoints = arrayListOf(event.marker.position),
-                        from = event.marker.position.latitude.toString() + "," + event.marker.position.longitude.toString(),
-                    )
+                state = state.copy(
+                    originMarkerState = event.marker,
+                    markerPoints = arrayListOf(event.marker.position),
+                    from = event.marker.position.latitude.toString() + "," + event.marker.position.longitude.toString(),
+                )
             }
 
             is MapEvent.OnDestinationMarkerAdded -> {
@@ -58,8 +63,6 @@ class MapViewModel @Inject constructor(
                 )
                 executeGetDirection()
             }
-
-            else -> {}
         }
     }
 
@@ -68,9 +71,7 @@ class MapViewModel @Inject constructor(
             currentLocation =
                 withContext(viewModelScope.coroutineContext + Dispatchers.IO) {
                     locationTracker
-                        .getCurrentLocation(
-                            onDisabled = { null },
-                            onEnabled = { null })
+                        .getCurrentLocation()
                 }
 
             if (currentLocation != null) {

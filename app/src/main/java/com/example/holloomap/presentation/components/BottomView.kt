@@ -34,8 +34,11 @@ fun BottomView(
         ) {
 
             Text(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(8.dp),
                 text = title,
+                style = MaterialTheme.typography.body2,
                 color = MaterialTheme.colors.onBackground
             )
         }

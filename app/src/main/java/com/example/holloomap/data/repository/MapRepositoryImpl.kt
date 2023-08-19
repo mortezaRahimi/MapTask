@@ -1,6 +1,5 @@
 package com.example.holloomap.data.repository
 
-import com.example.holloomap.data.local.MarkerInfo
 import com.example.holloomap.data.remote.MapApiService
 import com.example.mapdirection.data.remote.model.DirectionResponses
 

@@ -1,11 +1,9 @@
 package com.example.holloomap.presentation
 
-import android.location.Location
-import android.text.SpannableString
-import com.example.holloomap.R
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
-import kotlinx.coroutines.Job
+import com.example.holloomap.R
+import com.example.holloomap.util.UiText
 
 data class MapState(
     val from: String = "",
@@ -15,5 +13,5 @@ data class MapState(
     var points: List<LatLng> = listOf(),
     val destinationMarker: MarkerState = MarkerState(),
     val originMarkerState: MarkerState = MarkerState(),
-    val title: String = "Tap on the map to pin your destination"
+    val title: UiText = UiText.StringResource(R.string.pin_destination)
 )
