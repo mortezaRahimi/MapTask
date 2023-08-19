@@ -3,14 +3,10 @@ package com.example.holloomap.data.repository.location
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import android.content.IntentSender
 import android.location.Location
 import android.location.LocationManager
-import androidx.activity.result.IntentSenderRequest
 import com.example.holloomap.domain.use_case.location.LocationTracker
-import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
-import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 

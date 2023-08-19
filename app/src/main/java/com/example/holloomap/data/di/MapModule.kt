@@ -2,7 +2,6 @@ package com.example.holloomap.data.di
 
 import android.app.Application
 import androidx.room.Room
-import com.example.holloomap.data.local.MapDao
 import com.example.holloomap.data.local.MapDatabase
 import com.example.holloomap.data.repository.location.DefaultLocationTracker
 import com.example.holloomap.data.remote.MapApiService

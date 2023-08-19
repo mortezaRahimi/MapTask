@@ -5,7 +5,6 @@ import com.example.holloomap.data.local.entity.DestinationInfo
 import com.example.holloomap.data.remote.MapApiService
 import com.example.mapdirection.data.remote.model.DirectionResponses
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 class MapRepositoryImpl(
     private val api: MapApiService,

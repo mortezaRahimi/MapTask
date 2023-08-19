@@ -4,7 +4,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.MarkerState
 import com.example.holloomap.R
 import com.example.holloomap.data.local.entity.DestinationInfo
-import com.example.holloomap.domain.use_case.GetAllDestinations
 import com.example.holloomap.util.UiText
 
 data class MapState(

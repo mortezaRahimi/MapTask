@@ -5,7 +5,5 @@ import com.google.android.gms.maps.model.LatLng
 sealed class UiEvent {
     data class ShowSnackbar(val message: UiText) : UiEvent()
 
-    object SimulateDriving : UiEvent()
-
     data class UserLocationDetected(val userLocation: LatLng) : UiEvent()
 }
