@@ -9,12 +9,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.example.holloomap.util.UiText
 
 @Composable
 fun BottomView(
-    title: String,
+    title: UiText,
 ) {
+
+    val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -37,7 +41,7 @@ fun BottomView(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(8.dp),
-                text = title,
+                text = title.asString(context = context),
                 style = MaterialTheme.typography.body2,
                 color = MaterialTheme.colors.onBackground
             )

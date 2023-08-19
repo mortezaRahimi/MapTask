@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.*
 import com.example.holloomap.R
+import com.example.holloomap.util.UiText
 
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -107,7 +108,7 @@ fun GoogleMapView(
                 }
             }
 
-            BottomView(title = viewModel.state.title)
+            BottomView(title = UiText.DynamicString(viewModel.state.title.asString(context)))
 
 
         } else {
