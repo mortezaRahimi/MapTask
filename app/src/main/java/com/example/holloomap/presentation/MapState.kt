@@ -13,5 +13,6 @@ data class MapState(
     var points: List<LatLng> = listOf(),
     val destinationMarker: MarkerState = MarkerState(),
     val originMarkerState: MarkerState = MarkerState(),
-    val title: UiText = UiText.StringResource(R.string.pin_destination)
+    val title: UiText = UiText.StringResource(R.string.pin_destination),
+    val isDestinationAdded: Boolean = false
 )

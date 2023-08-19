@@ -1,6 +1,9 @@
 package com.example.holloomap.data.di
 
 import android.app.Application
+import androidx.room.Room
+import com.example.holloomap.data.local.MapDao
+import com.example.holloomap.data.local.MapDatabase
 import com.example.holloomap.data.repository.location.DefaultLocationTracker
 import com.example.holloomap.data.remote.MapApiService
 import com.example.holloomap.data.remote.UrlConstant.BASE_URL
@@ -8,6 +11,8 @@ import com.example.holloomap.data.repository.MapRepository
 import com.example.holloomap.domain.use_case.GetDirection
 import com.example.holloomap.domain.use_case.MapUseCase
 import com.example.holloomap.data.repository.MapRepositoryImpl
+import com.example.holloomap.domain.use_case.GetAllDestinations
+import com.example.holloomap.domain.use_case.SaveDestination
 import com.example.holloomap.domain.use_case.location.LocationTracker
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -50,24 +55,6 @@ object MapModule {
 
     @Provides
     @Singleton
-    fun provideMapRepository(
-        api: MapApiService
-    ): MapRepository {
-        return MapRepositoryImpl(api)
-    }
-
-    @Provides
-    @Singleton
-    fun provideMapUseCases(
-        repository: MapRepository
-    ): MapUseCase {
-        return MapUseCase(
-            getDirection = GetDirection(repository)
-        )
-    }
-
-    @Provides
-    @Singleton
     fun providesFusedLocationProviderClient(
         application: Application
     ): FusedLocationProviderClient =
@@ -82,4 +69,34 @@ object MapModule {
         fusedLocationProviderClient = fusedLocationProviderClient,
         application = application
     )
+
+    @Provides
+    @Singleton
+    fun provideMapDatabase(app: Application): MapDatabase {
+        return Room.databaseBuilder(
+            app.applicationContext,
+            MapDatabase::class.java,
+            "map_db"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMapRepository(
+        api: MapApiService,
+        db:MapDatabase
+    ): MapRepository {
+        return MapRepositoryImpl(api ,db.dao())
+    }
+    @Provides
+    @Singleton
+    fun provideMapUseCases(
+        repository: MapRepository
+    ): MapUseCase {
+        return MapUseCase(
+            getDirection = GetDirection(repository),
+            saveDestination = SaveDestination(repository),
+            getAllDestinations = GetAllDestinations(repository)
+        )
+    }
 }

@@ -6,8 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.holloomap.domain.use_case.location.LocationTracker
+import com.example.holloomap.R
+import com.example.holloomap.data.local.entity.DestinationInfo
 import com.example.holloomap.domain.use_case.MapUseCase
+import com.example.holloomap.domain.use_case.location.LocationTracker
 import com.example.holloomap.util.UiEvent
 import com.example.holloomap.util.UiText
 import com.google.android.gms.maps.model.LatLng
@@ -16,11 +18,13 @@ import com.google.maps.android.compose.MarkerState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import com.example.holloomap.R
+import kotlin.random.Random
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
@@ -59,11 +63,62 @@ class MapViewModel @Inject constructor(
                 state = state.copy(
                     destinationMarker = event.marker,
                     markerPoints = arrayListOf(state.markerPoints[0], event.marker.position),
-                    to = event.marker.position.latitude.toString() + "," + event.marker.position.longitude.toString()
+                    to = event.marker.position.latitude.toString() + "," + event.marker.position.longitude.toString(),
+                    isDestinationAdded = true
                 )
                 executeGetDirection()
             }
+
+            is MapEvent.OnSaveDestination -> {
+                saveDestination(state.destinationMarker.position)
+            }
+
+            is MapEvent.OnGetAllDestinations -> {
+
+                viewModelScope.launch {
+                    getAllDestinations()
+                }
+
+            }
         }
+    }
+
+    private suspend fun getAllDestinations() {
+        withContext(viewModelScope.coroutineContext + Dispatchers.IO) {
+            val destinations = mapUseCase.getAllDestinations()
+
+            destinations.onEach {
+                it.onEach {item ->
+                    println(item.lat)
+                } }
+
+        }.launchIn(viewModelScope)
+    }
+
+    private fun saveDestination(destinationMarker: LatLng) {
+
+        viewModelScope.launch(Dispatchers.IO) {
+            mapUseCase.saveDestination(
+                DestinationInfo(
+                    lat = destinationMarker.latitude.toString(),
+                    lon = destinationMarker.longitude.toString(),
+                    uid = Random.nextInt()
+                )
+            )
+
+            state = state.copy(
+                isDestinationAdded = false,
+                points = arrayListOf(),
+                destinationMarker = MarkerState(),
+            )
+
+            _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.destination_saved)))
+
+        }
+
+
+//        viewModelScope.launch {
+//       }
     }
 
     private fun getCurrentLocation() {

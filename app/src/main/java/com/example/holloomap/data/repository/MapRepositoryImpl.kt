@@ -1,10 +1,15 @@
 package com.example.holloomap.data.repository
 
+import com.example.holloomap.data.local.MapDao
+import com.example.holloomap.data.local.entity.DestinationInfo
 import com.example.holloomap.data.remote.MapApiService
 import com.example.mapdirection.data.remote.model.DirectionResponses
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class MapRepositoryImpl(
-    private val api: MapApiService
+    private val api: MapApiService,
+    private val dao: MapDao
 ) : MapRepository {
 
     override suspend fun getDirection(
@@ -21,5 +26,14 @@ class MapRepositoryImpl(
         }
 
     }
+
+    override suspend fun saveDestination(destinationInfo: DestinationInfo) {
+        dao.insertDestination(destinationInfo)
+    }
+
+    override fun getAllDestinations(): Flow<List<DestinationInfo>> {
+        return dao.getAllDestinations()
+    }
+
 
 }
