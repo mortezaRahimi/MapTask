@@ -43,8 +43,8 @@ class MapViewModel @Inject constructor(
     fun onEvent(event: MapEvent) {
 
         when (event) {
-            is MapEvent.OnPermissionGranted -> {
 
+            is MapEvent.OnPermissionGranted -> {
                 state = state.copy(
                     title = UiText.StringResource(R.string.pin_destination)
                 )
@@ -64,7 +64,7 @@ class MapViewModel @Inject constructor(
                     destinationMarker = event.marker,
                     markerPoints = arrayListOf(state.markerPoints[0], event.marker.position),
                     to = event.marker.position.latitude.toString() + "," + event.marker.position.longitude.toString(),
-                    isDestinationAdded = true
+                    isDestinationAdded = true,
                 )
                 executeGetDirection()
             }
@@ -78,12 +78,32 @@ class MapViewModel @Inject constructor(
                 viewModelScope.launch {
                     getAllDestinations()
                 }
+            }
 
+            is MapEvent.OnShowTheListClick -> {
+                state = state.copy(
+                    listIsExpanded = !state.listIsExpanded,
+                    shouldShowAllDestinationsOnMap = false
+                )
+                viewModelScope.launch {
+                    getAllDestinations()
+                }
+            }
+
+            is MapEvent.OnShowOnTheMapClick -> {
+                state = state.copy(
+                    listIsExpanded = false,
+                    shouldShowAllDestinationsOnMap = true
+                )
+                viewModelScope.launch {
+                    getAllDestinations()
+                }
             }
         }
     }
 
     private suspend fun getAllDestinations() {
+
         withContext(viewModelScope.coroutineContext + Dispatchers.IO) {
             val destinations = mapUseCase.getAllDestinations()
 
@@ -111,12 +131,9 @@ class MapViewModel @Inject constructor(
                 isDestinationAdded = false,
                 points = arrayListOf(),
                 destinationMarker = MarkerState(),
-                shouldShowAllDestinations = true
+                shouldShowAllDestinationsOnMap = false,
             )
-
             _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.destination_saved)))
-
-
         }
 
     }
@@ -180,7 +197,6 @@ class MapViewModel @Inject constructor(
                         )
                     )
                 }
-
         }
     }
 

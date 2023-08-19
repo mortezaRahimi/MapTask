@@ -1,5 +1,6 @@
 package com.example.holloomap.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.holloomap.util.UiText
 import com.example.holloomap.R
@@ -19,9 +21,9 @@ import com.example.holloomap.R
 fun ActionView(
     title: UiText,
     saveDestination: () -> Unit,
-    getAllDes: () -> Unit,
-    shouldShowAllDes:Boolean,
-    isDestinationAdded: Boolean
+    showOnMap: () -> Unit,
+    isDestinationAdded: Boolean,
+    showTheList: () -> Unit
 ) {
 
     val context = LocalContext.current
@@ -31,28 +33,31 @@ fun ActionView(
             .fillMaxSize()
     ) {
 
-        if(shouldShowAllDes){
-            Row(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-            ) {
 
-                Button(
-                    modifier = Modifier.padding(8.dp),
-                    onClick = getAllDes,
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+        ) {
 
-                    ) {
-                    Text(text = "Show All Des")
-                }
+            Button(
+                modifier = Modifier.padding(8.dp),
+                onClick = showOnMap,
+
+                ) {
+                Text(text = stringResource(R.string.show_all_marker_on_map))
             }
-        }
 
-        if (isDestinationAdded) {
-            Row(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-            ) {
+            Button(
+                modifier = Modifier.padding(8.dp),
+                onClick = showTheList,
 
+                ) {
+                Text(text = stringResource(R.string.show_list))
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (isDestinationAdded) {
                 Button(
                     modifier = Modifier.padding(8.dp),
                     onClick = saveDestination,
@@ -62,6 +67,7 @@ fun ActionView(
                 }
             }
         }
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -89,3 +95,4 @@ fun ActionView(
         }
     }
 }
+

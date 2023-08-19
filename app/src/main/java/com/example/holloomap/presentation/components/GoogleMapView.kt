@@ -1,7 +1,13 @@
 package com.example.holloomap.presentation.components
 
 import android.Manifest
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -10,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.example.holloomap.presentation.MapEvent
 import com.example.holloomap.presentation.MapViewModel
 import com.example.holloomap.util.UiEvent
@@ -92,13 +100,15 @@ fun GoogleMapView(
                         icon = BitmapDescriptorFactory.defaultMarker(
                             BitmapDescriptorFactory.HUE_BLUE
                         ),
-                        snippet = "Your Location",
-
-                        )
+                        title = stringResource(R.string.you_are_here),
+                        visible = true
+                    )
 
                     Marker(
                         state = MarkerState(position = viewModel.state.destinationMarker.position),
-                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
+                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN),
+                        title = stringResource(R.string.your_destination),
+                        visible = true
                     )
 
                     Polyline(
@@ -107,15 +117,17 @@ fun GoogleMapView(
                         color = Color.Green
                     )
 
-                    if (viewModel.state.allDestinations.isNotEmpty())
+                    if (viewModel.state.allDestinations.isNotEmpty() && viewModel.state.shouldShowAllDestinationsOnMap)
                         viewModel.state.allDestinations.forEach { position ->
                             Marker(
                                 state = MarkerState(
                                     position = LatLng(
                                         position.lat.toDouble(),
                                         position.lon.toDouble()
-                                    ),
-                                )
+                                    )
+                                ),
+                                title = position.lat + " " + position.lon,
+                                visible = true
                             )
                         }
 
@@ -127,9 +139,39 @@ fun GoogleMapView(
                 title = UiText.DynamicString(viewModel.state.title.asString(context)),
                 saveDestination = { viewModel.onEvent(MapEvent.OnSaveDestination) },
                 isDestinationAdded = viewModel.state.isDestinationAdded,
-                getAllDes = { viewModel.onEvent(MapEvent.OnGetAllDestinations) },
-                shouldShowAllDes = viewModel.state.shouldShowAllDestinations
+                showOnMap = { viewModel.onEvent(MapEvent.OnShowOnTheMapClick) },
+                showTheList = { viewModel.onEvent(MapEvent.OnShowTheListClick) }
             )
+
+            AnimatedVisibility(visible = viewModel.state.listIsExpanded) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .background(
+                            shape = RoundedCornerShape(10.dp),
+                            color = MaterialTheme.colors.background
+                        )
+                        .clickable(enabled = true) {  }
+                ) {
+
+                    Button(modifier = Modifier.align(Alignment.CenterHorizontally),
+                        onClick = { viewModel.onEvent(MapEvent.OnShowTheListClick) }) {
+                        Text(text = stringResource(R.string.close))
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    viewModel.state.allDestinations.forEach { destinations ->
+                        Text(
+                            modifier = Modifier
+                                .padding(8.dp),
+                            text = "Latitude: " + destinations.lat + "\n" + "Longitude: " + destinations.lon,
+                            color = MaterialTheme.colors.onBackground,
+                            style = MaterialTheme.typography.caption,
+                        )
+                    }
+                }
+            }
 
 
         } else {

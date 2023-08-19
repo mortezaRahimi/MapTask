@@ -17,6 +17,8 @@ data class MapState(
     val originMarkerState: MarkerState = MarkerState(),
     val title: UiText = UiText.StringResource(R.string.pin_destination),
     val isDestinationAdded: Boolean = false,
-    val shouldShowAllDestinations:Boolean = false,
-    val allDestinations: List<DestinationInfo> = arrayListOf()
+    val shouldShowAllDestinations: Boolean = false,
+    val shouldShowAllDestinationsOnMap: Boolean = false,
+    val allDestinations: List<DestinationInfo> = arrayListOf(),
+    val listIsExpanded: Boolean = false
 )

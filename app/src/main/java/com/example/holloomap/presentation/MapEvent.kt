@@ -13,4 +13,7 @@ sealed class MapEvent {
     object OnSaveDestination : MapEvent()
 
     object OnGetAllDestinations: MapEvent()
+
+    object OnShowTheListClick: MapEvent()
+    object OnShowOnTheMapClick: MapEvent()
 }

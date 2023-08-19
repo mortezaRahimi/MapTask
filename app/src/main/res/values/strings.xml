@@ -6,4 +6,9 @@
     <string name="pin_destination">Long Tap on the Map to pin your new destination then Direction will appear</string>
     <string name="save">Save this Destination</string>
     <string name="destination_saved">Destination Saved Successfully</string>
+    <string name="close">Close</string>
+    <string name="show_all_marker_on_map">Show All Markers on Map</string>
+    <string name="show_list">Show the list</string>
+    <string name="you_are_here">Your are Here</string>
+    <string name="your_destination">Your Destination</string>
 </resources>
